@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vineet Kumar | Flutter Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script> 
+        tailwind.config = {
+            darkMode: 'class', // Enable manual dark mode toggle
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1', 
+                        secondary: '#a855f7',
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script> 
+
+    <style>
+        /* Base Transitions for Smooth Color Change */
+        body, div, nav, section, h1, h2, p, a, button {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* Light Mode Background */
+        body {
+            background-color: #f8fafc; /* Slate 50 */
+            color: #1e293b; /* Slate 800 */
+        }
+
+        /* Dark Mode Background */
+        html.dark body {
+            background-color: #020617; /* Slate 950 */
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            background-attachment: fixed;
+            color: #e2e8f0; /* Slate 200 */
+        }
+
+        /* Glassmorphism Logic (Adapts to both modes) */
+        .glass-card {
+            /* Light Mode Glass */
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        html.dark .glass-card {
+            /* Dark Mode Glass */
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        html.dark .glass-card:hover {
+            border-color: rgba(168, 85, 247, 0.4);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+        }
+
+        /* Text Gradients */
+        .gradient-text {
+            background: linear-gradient(to right, #2563eb, #9333ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        html.dark .gradient-text {
+            background: linear-gradient(to right, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(to right, #4f46e5, #9333ea);
+        }
+        .btn-gradient:hover {
+            box-shadow: 0 0 15px rgba(147, 51, 234, 0.5);
+        }
+
+        .skill-bar { width: 0%; transition: width 1.5s ease-in-out; }
+        
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .fade-in-section.is-visible { opacity: 1; transform: none; }
+    </style>
+</head>
+<body class="font-sans antialiased">
+
+    <nav class="fixed w-full z-50 bg-white/80 dark:bg-[#020617]/80 backdrop-blur-md border-b border-slate-200 dark:border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0 font-bold text-2xl tracking-tighter cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <span class="text-blue-600 dark:text-blue-400">V</span>ineet<span class="text-purple-600 dark:text-purple-400">.</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#home" class="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white text-sm font-medium transition">Home</a>
+                    <a href="#about" class="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white text-sm font-medium transition">About</a>
+                    <a href="#skills" class="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white text-sm font-medium transition">Skills</a>
+                    <a href="#projects" class="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white text-sm font-medium transition">Projects</a>
+                    
+                    <button id="theme-toggle" class="p-2 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-yellow-300 hover:scale-110 transition shadow-sm">
+                        <i class="fas fa-moon dark:hidden"></i> <i class="fas fa-sun hidden dark:inline-block"></i> </button>
+
+                    <a href="#contact" class="px-5 py-2 rounded-full border border-purple-500 text-purple-600 dark:text-purple-300 hover:bg-purple-500 hover:text-white transition text-sm font-semibold">Hire Me</a>
+                </div>
+
+                <div class="flex items-center gap-4 md:hidden">
+                    <button id="theme-toggle-mobile" class="p-2 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-yellow-300 transition">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:inline-block"></i>
+                    </button>
+
+                    <button id="mobile-menu-btn" class="text-slate-800 dark:text-slate-300 p-2">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="md:hidden hidden bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-white/10" id="mobile-menu">
+            <div class="px-4 py-4 space-y-2">
+                <a href="#home" class="block text-slate-700 dark:text-slate-300 hover:text-blue-500 py-2">Home</a>
+                <a href="#about" class="block text-slate-700 dark:text-slate-300 hover:text-blue-500 py-2">About</a>
+                <a href="#projects" class="block text-slate-700 dark:text-slate-300 hover:text-blue-500 py-2">Projects</a>
+                <a href="#contact" class="block text-slate-700 dark:text-slate-300 hover:text-blue-500 py-2">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden pt-16">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-blue-400 dark:bg-blue-600 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[80px] opacity-30 dark:opacity-20 animate-blob"></div>
+        <div class="absolute bottom-20 right-10 w-72 h-72 bg-purple-400 dark:bg-purple-600 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[80px] opacity-30 dark:opacity-20 animate-blob animation-delay-2000"></div>
+
+        <div class="text-center z-10 px-4 max-w-4xl mx-auto">
+            <div class="inline-block px-4 py-1 rounded-full border border-blue-500/30 bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-300 text-sm mb-6 font-semibold animate-pulse">
+                Available for Flutter Projects
+            </div>
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight text-slate-900 dark:text-white leading-tight">
+                Hey, I'm <span class="gradient-text">Vineet Kumar</span>
+            </h1>
+            <h2 class="text-2xl md:text-3xl text-slate-600 dark:text-slate-400 mb-8 font-light">
+                Creating <span id="typing-text" class="text-slate-800 dark:text-white font-medium border-b-2 border-purple-500"></span>
+            </h2>
+            <p class="text-lg text-slate-600 dark:text-slate-400 mb-10 max-w-2xl mx-auto">
+                Experienced Flutter Developer with 2+ years of expertise. I build high-performance, pixel-perfect mobile apps for Android & iOS.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#projects" class="btn-gradient text-white font-bold py-4 px-10 rounded-full transition transform hover:scale-105 shadow-lg shadow-purple-500/30 dark:shadow-purple-900/50">
+                    View Portfolio
+                </a>
+                <a href="https://www.linkedin.com/in/vineet-kumar-b5509632b" target="_blank" class="glass-card text-slate-800 dark:text-white hover:bg-slate-100 dark:hover:bg-white/10 font-bold py-4 px-10 rounded-full transition flex items-center justify-center gap-2">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-20 relative fade-in-section">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 text-slate-900 dark:text-white">Building Mobile Experiences That <span class="gradient-text">Matter</span></h2>
+                    <p class="text-slate-600 dark:text-slate-400 mb-6 text-lg leading-relaxed">
+                        I specialize in cross-platform development using **Flutter & Dart**. My goal is to bridge the gap between complex backend logic and smooth user interfaces.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4">
+                            <div class="bg-blue-100 dark:bg-blue-500/10 p-3 rounded-lg text-blue-600 dark:text-blue-400"><i class="fas fa-rocket text-xl"></i></div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 dark:text-white">Performance First</h4>
+                                <p class="text-slate-600 dark:text-slate-500 text-sm">Optimized code for smooth 60fps animations.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="bg-purple-100 dark:bg-purple-500/10 p-3 rounded-lg text-purple-600 dark:text-purple-400"><i class="fas fa-layer-group text-xl"></i></div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 dark:text-white">Clean Architecture</h4>
+                                <p class="text-slate-600 dark:text-slate-500 text-sm">Scalable apps using BLoC & Provider patterns.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="glass-card p-6 rounded-2xl text-center border-t-4 border-blue-500">
+                        <h3 class="text-4xl font-bold text-slate-900 dark:text-white mb-2 counter" data-target="15">15</h3>
+                        <p class="text-slate-600 dark:text-slate-400">Apps Published</p>
+                    </div>
+                    <div class="glass-card p-6 rounded-2xl text-center border-t-4 border-purple-500">
+                        <h3 class="text-4xl font-bold text-slate-900 dark:text-white mb-2 counter" data-target="10">3</h3>
+                        <p class="text-slate-600 dark:text-slate-400">Enterprise Projects</p>
+                    </div>
+                    <div class="glass-card p-6 rounded-2xl text-center border-t-4 border-pink-500">
+                        <h3 class="text-4xl font-bold text-slate-900 dark:text-white mb-2 counter" data-target="2">3</h3>
+                        <p class="text-slate-600 dark:text-slate-400">Years Exp.</p>
+                    </div>
+                    <div class="glass-card p-6 rounded-2xl text-center border-t-4 border-teal-500">
+                        <h3 class="text-4xl font-bold text-slate-900 dark:text-white mb-2">95%</h3>
+                        <p class="text-slate-600 dark:text-slate-400">Client Satisfaction</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="py-20 fade-in-section bg-slate-100 dark:bg-black/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-blue-600 dark:text-blue-400 font-bold tracking-wider uppercase text-sm">My Arsenal</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2 text-slate-900 dark:text-white">Tech Stack & <span class="gradient-text">Skills</span></h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="space-y-6 text-slate-900 dark:text-white">
+                    <div>
+                        <div class="flex justify-between mb-2"><span class="font-semibold">Flutter / Dart</span><span class="text-blue-600 dark:text-blue-400">95%</span></div>
+                        <div class="h-2 bg-slate-300 dark:bg-slate-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-blue-500 to-purple-600 skill-bar" data-width="95%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-2"><span class="font-semibold">Firebase (Auth, Firestore, FCM)</span><span class="text-blue-600 dark:text-blue-400">90%</span></div>
+                        <div class="h-2 bg-slate-300 dark:bg-slate-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-blue-500 to-purple-600 skill-bar" data-width="90%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-2"><span class="font-semibold">REST APIs Integration</span><span class="text-blue-600 dark:text-blue-400">92%</span></div>
+                        <div class="h-2 bg-slate-300 dark:bg-slate-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-blue-500 to-purple-600 skill-bar" data-width="92%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-2"><span class="font-semibold">State Management (Bloc/Provider)</span><span class="text-blue-600 dark:text-blue-400">88%</span></div>
+                        <div class="h-2 bg-slate-300 dark:bg-slate-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-blue-500 to-purple-600 skill-bar" data-width="88%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="glass-card p-4 rounded-xl flex flex-col items-center justify-center hover:bg-slate-100 dark:hover:bg-white/5 transition duration-300">
+                        <i class="fas fa-code text-3xl text-yellow-500 dark:text-yellow-400 mb-2"></i>
+                        <span class="text-sm font-medium text-slate-800 dark:text-slate-200">C / C++</span>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl flex flex-col items-center justify-center hover:bg-slate-100 dark:hover:bg-white/5 transition duration-300">
+                        <i class="fab fa-html5 text-3xl text-orange-500 mb-2"></i>
+                        <span class="text-sm font-medium text-slate-800 dark:text-slate-200">HTML/CSS</span>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl flex flex-col items-center justify-center hover:bg-slate-100 dark:hover:bg-white/5 transition duration-300">
+                        <i class="fab fa-git-alt text-3xl text-red-500 mb-2"></i>
+                        <span class="text-sm font-medium text-slate-800 dark:text-slate-200">Git/GitHub</span>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl flex flex-col items-center justify-center hover:bg-slate-100 dark:hover:bg-white/5 transition duration-300">
+                        <i class="fas fa-database text-3xl text-green-500 dark:text-green-400 mb-2"></i>
+                        <span class="text-sm font-medium text-slate-800 dark:text-slate-200">SQLite/Hive</span>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl flex flex-col items-center justify-center hover:bg-slate-100 dark:hover:bg-white/5 transition duration-300">
+                        <i class="fas fa-gamepad text-3xl text-purple-500 dark:text-purple-400 mb-2"></i>
+                        <span class="text-sm font-medium text-slate-800 dark:text-slate-200">Flame (Game)</span>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl flex flex-col items-center justify-center hover:bg-slate-100 dark:hover:bg-white/5 transition duration-300">
+                        <i class="fas fa-robot text-3xl text-cyan-500 dark:text-cyan-400 mb-2"></i>
+                        <span class="text-sm font-medium text-slate-800 dark:text-slate-200">TFLite (AI)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="py-20 fade-in-section">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-purple-600 dark:text-purple-400 font-bold tracking-wider uppercase text-sm">Portfolio</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2 text-slate-900 dark:text-white">Live <span class="gradient-text">Projects</span></h2>
+                <p class="text-slate-600 dark:text-slate-400 mt-4">Check out all my applications currently live on Play Store & App Store</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <div class="h-40 bg-gradient-to-br from-blue-800 to-slate-800 dark:from-blue-900 dark:to-slate-900 flex items-center justify-center relative overflow-hidden">
+                         <i class="fas fa-user-clock text-6xl text-white/50 dark:text-blue-500/50 transform group-hover:scale-110 transition duration-500"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">OAEMS</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-3">Office Attendance System with Face Recognition (MobileFaceNet). Automated salary calculation and role-based access.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-slate-200 dark:bg-white/5 rounded text-xs text-blue-700 dark:text-blue-300">Flutter</span>
+                            <span class="px-2 py-1 bg-slate-200 dark:bg-white/5 rounded text-xs text-blue-700 dark:text-blue-300">AI/ML</span>
+                        </div>
+                        <a href="https://apps.apple.com/in/app/oaems/id6744517812" target="_blank" class="block text-center w-full py-2 rounded-lg border border-blue-500/30 hover:bg-blue-600 hover:text-white text-blue-600 dark:text-blue-300 transition text-sm font-semibold">
+                            <i class="fab fa-app-store"></i> App Store
+                        </a>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <div class="h-40 bg-gradient-to-br from-green-800 to-slate-800 dark:from-green-900 dark:to-slate-900 flex items-center justify-center relative overflow-hidden">
+                        <i class="fas fa-cricket text-6xl text-white/50 dark:text-green-500/50 transform group-hover:scale-110 transition duration-500"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Googly 11</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-3">Fantasy Cricket Platform handling 1000+ users. Real-time score tracking, socket integration, and secure payments.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-slate-200 dark:bg-white/5 rounded text-xs text-green-700 dark:text-green-300">Sports</span>
+                            <span class="px-2 py-1 bg-slate-200 dark:bg-white/5 rounded text-xs text-green-700 dark:text-green-300">Socket.IO</span>
+                        </div>
+                        <a href="https://apps.apple.com/in/app/googly-11/id6502877260" target="_blank" class="block text-center w-full py-2 rounded-lg border border-green-500/30 hover:bg-green-600 hover:text-white text-green-600 dark:text-green-300 transition text-sm font-semibold">
+                            <i class="fab fa-app-store"></i> App Store
+                        </a>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <div class="h-40 bg-gradient-to-br from-orange-800 to-slate-800 dark:from-orange-900 dark:to-slate-900 flex items-center justify-center relative overflow-hidden">
+                        <i class="fas fa-balance-scale text-6xl text-white/50 dark:text-orange-500/50 transform group-hover:scale-110 transition duration-500"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">AdvoLive</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">A legal tech application. Connects clients with advocates live. Real-time consultation features.</p>
+                        <a href="https://play.google.com/store/apps/details?id=com.advor.advolive" target="_blank" class="block text-center w-full py-2 rounded-lg border border-orange-500/30 hover:bg-orange-600 hover:text-white text-orange-600 dark:text-orange-300 transition text-sm font-semibold">
+                            <i class="fab fa-google-play"></i> Play Store
+                        </a>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <div class="h-40 bg-gradient-to-br from-cyan-800 to-slate-800 dark:from-cyan-900 dark:to-slate-900 flex items-center justify-center relative overflow-hidden">
+                        <i class="fas fa-tshirt text-6xl text-white/50 dark:text-cyan-500/50 transform group-hover:scale-110 transition duration-500"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">AllDone Laundry</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">Laundry service management app. Booking, tracking, and delivery management system.</p>
+                        <a href="https://apps.apple.com/in/app/alldone-laundry/id6743748909" target="_blank" class="block text-center w-full py-2 rounded-lg border border-cyan-500/30 hover:bg-cyan-600 hover:text-white text-cyan-600 dark:text-cyan-300 transition text-sm font-semibold">
+                            <i class="fab fa-app-store"></i> App Store
+                        </a>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <div class="h-40 bg-gradient-to-br from-yellow-700 to-slate-800 dark:from-yellow-900 dark:to-slate-900 flex items-center justify-center relative overflow-hidden">
+                        <i class="fas fa-shopping-basket text-6xl text-white/50 dark:text-yellow-500/50 transform group-hover:scale-110 transition duration-500"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">MyThela</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">E-commerce/Grocery platform for local vendors. User app for browsing and ordering.</p>
+                        <a href="https://play.google.com/store/apps/details?id=in.aapsworld.www.mythela" target="_blank" class="block text-center w-full py-2 rounded-lg border border-yellow-500/30 hover:bg-yellow-600 hover:text-white text-yellow-600 dark:text-yellow-300 transition text-sm font-semibold">
+                            <i class="fab fa-google-play"></i> Play Store
+                        </a>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl overflow-hidden group">
+                    <div class="h-40 bg-gradient-to-br from-yellow-800 to-slate-900 flex items-center justify-center relative overflow-hidden">
+                        <i class="fas fa-store text-6xl text-white/50 dark:text-yellow-600/50 transform group-hover:scale-110 transition duration-500"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">MyThela Partner</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">Vendor side application for MyThela. Inventory management and order processing.</p>
+                        <a href="https://play.google.com/store/apps/details?id=mythelapartner.com" target="_blank" class="block text-center w-full py-2 rounded-lg border border-yellow-600/30 hover:bg-yellow-700 hover:text-white text-yellow-700 dark:text-yellow-300 transition text-sm font-semibold">
+                            <i class="fab fa-google-play"></i> Play Store
+                        </a>
+                    </div>
+                </div>
+
+                 <div class="glass-card rounded-2xl overflow-hidden group">
+                    <div class="h-40 bg-gradient-to-br from-indigo-800 to-slate-800 dark:from-indigo-900 dark:to-slate-900 flex items-center justify-center relative overflow-hidden">
+                        <i class="fas fa-building text-6xl text-white/50 dark:text-indigo-500/50 transform group-hover:scale-110 transition duration-500"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Shiva Group</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">Business application for Shiva Group. Internal management or client facing utilities.</p>
+                        <a href="https://play.google.com/store/apps/details?id=com.ndmeaa.shivagroup" target="_blank" class="block text-center w-full py-2 rounded-lg border border-indigo-500/30 hover:bg-indigo-600 hover:text-white text-indigo-600 dark:text-indigo-300 transition text-sm font-semibold">
+                            <i class="fab fa-google-play"></i> Play Store
+                        </a>
+                    </div>
+                </div>
+
+                 <div class="glass-card rounded-2xl overflow-hidden group">
+                    <div class="h-40 bg-gradient-to-br from-pink-800 to-slate-800 dark:from-pink-900 dark:to-slate-900 flex items-center justify-center relative overflow-hidden">
+                        <i class="fas fa-book text-6xl text-white/50 dark:text-pink-500/50 transform group-hover:scale-110 transition duration-500"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Ndmeaa Testbook</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">Educational platform or testing application for Ndmeaa Technology clients.</p>
+                        <a href="https://play.google.com/store/apps/details?id=com.ndmeaatestbook" target="_blank" class="block text-center w-full py-2 rounded-lg border border-pink-500/30 hover:bg-pink-600 hover:text-white text-pink-600 dark:text-pink-300 transition text-sm font-semibold">
+                            <i class="fab fa-google-play"></i> Play Store
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-20 relative fade-in-section">
+        <div class="absolute inset-0 bg-gradient-to-t from-blue-100 to-transparent dark:from-blue-900/10 dark:to-transparent pointer-events-none"></div>
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <h2 class="text-4xl font-bold mb-8 text-slate-900 dark:text-white">Ready to <span class="gradient-text">Collaborate?</span></h2>
+            <p class="text-slate-600 dark:text-slate-300 mb-12 text-lg">
+                I am currently open for full-time opportunities or freelance projects. Let's build something amazing together.
+            </p>
+            
+            <div class="flex flex-col md:flex-row justify-center gap-6">
+                <a href="mailto:vineetkvs46@gmail.com" class="glass-card px-8 py-8 rounded-2xl hover:-translate-y-2 transition duration-300 flex flex-col items-center gap-4 w-full md:w-64 border-t border-blue-500/50">
+                    <div class="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 text-2xl">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Email Me</p>
+                        <p class="font-bold text-slate-900 dark:text-white break-all">vineetkvs46@gmail.com</p>
+                    </div>
+                </a>
+                <a href="tel:+9163879676320" class="glass-card px-8 py-8 rounded-2xl hover:-translate-y-2 transition duration-300 flex flex-col items-center gap-4 w-full md:w-64 border-t border-purple-500/50">
+                    <div class="w-16 h-16 rounded-full bg-purple-100 dark:bg-purple-500/20 flex items-center justify-center text-purple-600 dark:text-purple-400 text-2xl">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Call Me</p>
+                        <p class="font-bold text-slate-900 dark:text-white">+91 63879676320</p>
+                    </div>
+                </a>
+            </div>
+
+            <footer class="mt-24 pt-8 border-t border-slate-300 dark:border-white/5 text-slate-500 text-sm">
+                <p>Designed & Developed with <i class="fas fa-heart text-red-500"></i> by Vineet Kumar</p>
+                <div class="mt-4 flex justify-center gap-6 text-xl">
+                    <a href="https://www.linkedin.com/in/vineet-kumar-b5509632b" class="hover:text-blue-500 transition"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.instagram.com/vino__67?utm_source=qr&igsh=MTAxcWs3YW50NG00NQ==" class="hover:text-pink-500 transition"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="hover:text-slate-900 dark:hover:text-white transition"><i class="fab fa-github"></i></a>
+                </div>
+            </footer>
+        </div>
+    </section>
+
+    <script>
+        $(document).ready(function() {
+            // --- Theme Toggling Logic ---
+            // Check local storage or system preference on load
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+
+            // Function to toggle theme
+            function toggleTheme() {
+                document.documentElement.classList.toggle('dark');
+                if(document.documentElement.classList.contains('dark')){
+                    localStorage.theme = 'dark';
+                } else {
+                    localStorage.theme = 'light';
+                }
+            }
+
+            // Bind click events to both desktop and mobile buttons
+            $("#theme-toggle, #theme-toggle-mobile").click(function() {
+                toggleTheme();
+            });
+
+            // --- Existing Animation Logic ---
+            const words = ["Flutter Apps", "Robust Backends", "Scalable UI"];
+            let i = 0;
+
+            function typeWriter() {
+                const speed = 100;
+                let text = words[i];
+                let elem = $("#typing-text");
+                let charIndex = 0;
+                elem.text("");
+                
+                function type() {
+                    if (charIndex < text.length) {
+                        elem.append(text.charAt(charIndex));
+                        charIndex++;
+                        setTimeout(type, speed);
+                    } else {
+                        setTimeout(erase, 2000);
+                    }
+                }
+                
+                function erase() {
+                    if (charIndex > 0) {
+                        elem.text(text.substring(0, charIndex - 1));
+                        charIndex--;
+                        setTimeout(erase, 50);
+                    } else {
+                        i = (i + 1) % words.length;
+                        setTimeout(type, 500);
+                    }
+                }
+                type();
+            }
+            typeWriter();
+
+            $('a[href^="#"]').on('click', function(event) {
+                var target = $(this.getAttribute('href'));
+                if( target.length ) {
+                    event.preventDefault();
+                    $('html, body').stop().animate({
+                        scrollTop: target.offset().top - 70
+                    }, 800);
+                    $("#mobile-menu").slideUp();
+                }
+            });
+
+            $("#mobile-menu-btn").click(function() {
+                $("#mobile-menu").slideToggle();
+            });
+
+            $(window).scroll(function() {
+                $('.fade-in-section').each(function() {
+                    var bottom_of_object = $(this).offset().top + 100;
+                    var bottom_of_window = $(window).scrollTop() + $(window).height();
+                    if( bottom_of_window > bottom_of_object ){
+                        $(this).addClass('is-visible');
+                    }
+                });
+
+                if ($('#skills').hasClass('is-visible')) {
+                    $('.skill-bar').each(function() {
+                        $(this).css('width', $(this).attr('data-width'));
+                    });
+                }
+                
+                if ($('#about').hasClass('is-visible')) {
+                    $('.counter').each(function () {
+                        var $this = $(this);
+                        if (!$this.hasClass('counted')) {
+                            $jQuery({ Counter: 0 }).animate({ Counter: $this.attr('data-target') }, {
+                                duration: 2000,
+                                easing: 'swing',
+                                step: function () {
+                                    $this.text(Math.ceil(this.Counter) + "+");
+                                }
+                            });
+                            $this.addClass('counted');
+                        }
+                    });
+                }
+            });
+            $(window).scroll();
+        });
+    </script>
+</body>
+</html>
